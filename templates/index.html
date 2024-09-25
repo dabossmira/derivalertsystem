@@ -3,26 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Price Alert App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Deriv Price Alert System by Onoriode</title>
 </head>
 <body>
     <div class="container">
-        <h1>Set Price Alerts</h1>
+        <h1>Price Alert System</h1>
         <form action="/set_alert" method="POST">
-            <label for="instrument">Instrument:</label><br>
-            <input type="text" id="instrument" name="instrument" required><br>
-
-            <label for="target_price">Target Price:</label><br>
-            <input type="text" id="target_price" name="target_price" required><br>
-
-            <label for="custom_message">Custom Message:</label><br>
-            <input type="text" id="custom_message" name="custom_message" required><br>
-
+            <div class="form-group">
+                <label for="instrument">Instrument:</label>
+                <input type="text" id="instrument" name="instrument" required>
+            </div>
+            <div class="form-group">
+                <label for="target_price">Target Price:</label>
+                <input type="number" step="0.01" id="target_price" name="target_price" required>
+            </div>
+            <div class="form-group">
+                <label for="custom_message">Custom Message:</label>
+                <textarea id="custom_message" name="custom_message" required></textarea>
+            </div>
             <button type="submit">Set Alert</button>
         </form>
-
-        <a href="/start_ws">Start WebSocket</a>
+        <div class="status">
+            <a href="/start_ws" class="start-button">Start WebSocket</a>
+        </div>
     </div>
 </body>
 </html>

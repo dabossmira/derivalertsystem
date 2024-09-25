@@ -2,11 +2,61 @@ from flask import Flask, render_template, request, redirect, url_for
 import websocket
 import json
 import threading
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import requests
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 
 # Global variable to store alerts
 alert_prices = {}
+
+# Email Configuration
+EMAIL_ADDRESS = os.getenv('EMAIL_ADDRESS')  # Your email address from .env
+EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')  # Your email password or app password from .env
+TO_EMAIL = os.getenv('TO_EMAIL')  # Recipient email address from .env
+
+# Telegram Configuration
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')  # Your Telegram bot token from .env
+TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')  # Your Telegram chat ID from .env
+
+def send_email(subject, message):
+    """Function to send email using SSL."""
+    msg = MIMEMultipart()
+    msg['From'] = EMAIL_ADDRESS
+    msg['To'] = TO_EMAIL
+    msg['Subject'] = subject
+
+    msg.attach(MIMEText(message, 'plain'))
+    try:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+            server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+            server.send_message(msg)
+            print(f"Email sent to {TO_EMAIL}")
+    except Exception as e:
+        print(f"Failed to send email. Error: {e}")
+
+def send_telegram_message(message):
+    """Function to send a message to Telegram."""
+    try:
+        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+        payload = {
+            'chat_id': TELEGRAM_CHAT_ID,
+            'text': message
+        }
+        response = requests.post(url, data=payload)
+        if response.status_code == 200:
+            print("Message sent to Telegram.")
+        else:
+            print(f"Failed to send message to Telegram. Response: {response.text}")
+    except Exception as e:
+        print(f"Error sending message to Telegram: {e}")
 
 @app.route('/')
 def index():
@@ -42,8 +92,16 @@ def on_message(ws, message):
             target_price = alert_prices[symbol]['target_price']
             custom_message = alert_prices[symbol]['custom_message']
             if abs(price - target_price) <= 0.1:  # Using a tolerance of 0.1
-                print(f"ALERT: {symbol} has reached the desired price of {target_price}! Current price: {price}. Message: {custom_message}")
-                del alert_prices[symbol]  # Remove the alert after triggering
+                alert_message = (f"ALERT: {symbol} has reached the desired price of {target_price}! "
+                                 f"Current price: {price}. Message: {custom_message}")
+                print(alert_message)
+
+                # Send alerts via email and Telegram
+                send_email(subject=f"Price Alert for {symbol}", message=alert_message)
+                send_telegram_message(alert_message)
+
+                # Remove the alert after triggering
+                del alert_prices[symbol]
 
 def on_error(ws, error):
     print(f"WebSocket error: {error}")

@@ -3,22 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deriv Price Alert by DabossMiRA</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Price Alert App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-    <h1>Set a Price Alert</h1>
-    <form action="/set_alert" method="POST">
-        <label for="instrument">Instrument:</label>
-        <input type="text" id="instrument" name="instrument" required><br><br>
-        
-        <label for="target_price">Target Price:</label>
-        <input type="text" id="target_price" name="target_price" required><br><br>
-        
-        <label for="custom_message">Custom Message:</label>
-        <input type="text" id="custom_message" name="custom_message" required><br><br>
-        
-        <button type="submit">Set Alert</button>
-    </form>
+    <div class="container">
+        <h1>Set Price Alerts</h1>
+        <form action="/set_alert" method="POST">
+            <label for="instrument">Instrument:</label><br>
+            <input type="text" id="instrument" name="instrument" required><br>
+
+            <label for="target_price">Target Price:</label><br>
+            <input type="text" id="target_price" name="target_price" required><br>
+
+            <label for="custom_message">Custom Message:</label><br>
+            <input type="text" id="custom_message" name="custom_message" required><br>
+
+            <button type="submit">Set Alert</button>
+        </form>
+
+        <a href="/start_ws">Start WebSocket</a>
+    </div>
 </body>
 </html>

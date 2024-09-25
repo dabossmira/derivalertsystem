@@ -14,38 +14,57 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
+    padding: 20px;
 }
 
 .container {
     background-color: white;
     width: 100%;
-    max-width: 500px;
+    max-width: 800px;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
+/* Title */
 h1 {
-    font-size: 1.8rem;
+    font-size: 2rem;
     text-align: center;
-    color: #5a67d8;
+    color: #ff444f;
     margin-bottom: 20px;
 }
 
+/* Chart */
+.chart-container {
+    margin-bottom: 20px;
+}
+
+.chart-container iframe {
+    width: 100%;
+    max-width: 720px;
+    height: 480px;
+    border: none;
+}
+
+/* Form */
 form {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .form-group {
     margin-bottom: 15px;
+    width: 100%;
 }
 
 .form-group label {
-    font-size: 0.9rem;
+    font-size: 1rem;
     margin-bottom: 5px;
     display: block;
     color: #4a5568;
+    text-align: left;
 }
 
 .form-group input,
@@ -67,7 +86,7 @@ form {
 button {
     background-color: #5a67d8;
     color: white;
-    padding: 10px;
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
     font-size: 1rem;
@@ -85,7 +104,7 @@ button:hover {
 }
 
 .logs-container h2 {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     color: #2d3748;
     margin-bottom: 10px;
 }
@@ -110,6 +129,26 @@ button:hover {
 }
 
 /* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+        width: 100%;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .chart-container iframe {
+        height: 360px;
+    }
+
+    button {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+}
+
 @media (max-width: 600px) {
     .container {
         padding: 15px;
@@ -118,6 +157,10 @@ button:hover {
 
     h1 {
         font-size: 1.5rem;
+    }
+
+    .chart-container iframe {
+        height: 300px;
     }
 
     button {

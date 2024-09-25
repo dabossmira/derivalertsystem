@@ -9,6 +9,13 @@
 <body>
     <div class="container">
         <h1>Deriv Price Alert System by Onoriode</h1>
+
+        <!-- Live chart section -->
+        <div class="chart-container">
+            <iframe src="https://charts.deriv.com/embed?symbol=YOUR_SYMBOL" 
+                    width="720" height="480" frameborder="0" allowfullscreen></iframe>
+        </div>
+
         <form id="alert-form" action="/set_alert" method="POST">
             <div class="form-group">
                 <label for="instrument">Instrument:</label>
@@ -28,6 +35,7 @@
             </div>
             <button type="submit">Set Alert</button>
         </form>
+
         <div class="logs-container">
             <h2>Price Logs</h2>
             <div id="logs"></div>

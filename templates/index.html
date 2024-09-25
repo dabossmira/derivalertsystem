@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <h1>Deriv Price Alert System by Onoriode</h1>
-        <form action="/set_alert" method="POST">
+        <form id="alert-form" action="/set_alert" method="POST">
             <div class="form-group">
                 <label for="instrument">Instrument:</label>
                 <input type="text" id="instrument" name="instrument" required>
@@ -22,11 +22,48 @@
                 <label for="custom_message">Custom Message:</label>
                 <textarea id="custom_message" name="custom_message" required></textarea>
             </div>
+            <div class="form-group">
+                <label for="email">Your Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
             <button type="submit">Set Alert</button>
         </form>
-        <div class="status">
-            <a href="/start_ws" class="start-button">Start WebSocket</a>
+        <div class="logs-container">
+            <h2>Price Logs</h2>
+            <div id="logs"></div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('alert-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch('/set_alert', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.status);
+                updateLogs();
+            });
+        });
+
+        function updateLogs() {
+            fetch('/logs')
+                .then(response => response.json())
+                .then(data => {
+                    const logsDiv = document.getElementById('logs');
+                    logsDiv.innerHTML = '';  // Clear current logs
+                    data.forEach(log => {
+                        const p = document.createElement('p');
+                        p.textContent = log;
+                        logsDiv.appendChild(p);
+                    });
+                });
+        }
+
+        setInterval(updateLogs, 5000);  // Fetch new logs every 5 seconds
+    </script>
 </body>
 </html>
